@@ -60,7 +60,8 @@
 提示： 可根据服务接口部署的情况修改客户端源码中的请求地址
 
 
----------------使用方法---------------------
+使用方法
+---------------------
 1. 设置乘车路线和车站，提醒时间，到了设定时间后，会自动播报公交车信息
 http://公交车服务IP地址:9090/setting
 
@@ -77,13 +78,17 @@ http://公交车服务IP地址:9090/setting
 
 
 
--------------开机自启动------------------------
+开机自启动
+------------------------
 在/etc/rc.local 或 /etc/rc.d/rc.local 文件中加入启动命令
+<pre><code>
 export FLASK_APP=app.py
 nohup flask run&
 nohup python3 client/detect.py &
 nohup java -jar mango.jar
+</code></pre>
 
 修改权限
+<pre><code>
 chmod +x /etc/rc.d/rc.local
-
+</code></pre>
