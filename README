@@ -6,6 +6,8 @@ MANGO 公交出行提醒小助手
 麦克风
 
 1. 软件环境依赖
+java
+springboot
 python >= 3.7
 portaudio.dev >= 18.1-7.1
 python3-pyaudio >= 0.2.11-1+b2
@@ -18,15 +20,21 @@ pocketsphinx >= 0.1.15
 requests >= 2.21.0
 lxml >= 4.3.2
 
-java2
-springboot
-sqlite
-Nginx/Apache/IIS
-
 
 ----------------使用方法-------------------
-nohup flask run &
-nohup python3 ~/pyProj/client/detect.py &
+客户端
+运行 nohup flask run &
+
+语音相关接口服务
+运行 nohup python3 client/detect.py &
+
+公交车接口服务和设置页面
+首次运行前先打包
+cd magane/magane
+./gradlew build
+运行 java -jar magane.jar
+
+提示： 请根据服务接口部署的情况修改客户端源码中的请求地址
 
 
 -------------开机自启动------------------------
@@ -34,6 +42,7 @@ nohup python3 ~/pyProj/client/detect.py &
 export FLASK_APP=app.py
 nohup flask run&
 nohup python3 client/detect.py &
+nohup java -jar magane.jar
 
 修改权限
 chmod +x /etc/rc.d/rc.local
