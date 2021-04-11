@@ -1,0 +1,38 @@
+MANGO 公交出行提醒小助手
+---------------安装----------------------
+0. 硬件环境
+电脑、树莓派或其他类似设备
+音响
+麦克风
+
+1. 软件环境依赖
+python >= 3.7
+portaudio.dev >= 18.1-7.1
+python3-pyaudio >= 0.2.11-1+b2
+
+[python模块依赖]
+pygame >= 2.0.1
+flask >= 1.0.2
+flask_cors >= 3.0.10
+pocketsphinx >= 0.1.15
+requests >= 2.21.0
+
+java2
+springboot
+sqlite
+Nginx/Apache/IIS
+
+----------------使用方法-------------------
+nohup flask run &
+nohup python3 ~/pyProj/client/detect.py &
+
+
+-------------开机自启动------------------------
+在/etc/rc.local 或 /etc/rc.d/rc.local 文件中加入启动命令
+export FLASK_APP=~/pyProj/app.py
+nohup flask run&
+nohup python3 ~/pyProj/client/detect.py &
+
+修改权限
+chmod +x /etc/rc.d/rc.local
+
