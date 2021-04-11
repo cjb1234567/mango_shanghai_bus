@@ -48,14 +48,23 @@
 启动
 -------------------
 - 客户端
-运行 nohup flask run &
+运行 
+<pre><code>
+nohup flask run &
+</pre></code>
 
 - 语音相关接口服务
-运行 nohup python3 client/detect.py &
+运行 
+<pre><code>
+nohup python3 client/detect.py &
+</pre></code>
 
 - 公交车接口服务和设置页面
 打包  ./magane/magane/gradlew build  或者直接下载jar包： https://jbox.sjtu.edu.cn/l/5F2hSZ (提取码：rnex)
-运行 java -jar mango.jar
+运行 
+<pre><code>
+java -jar mango.jar
+</pre></code>
 
 提示： 可根据服务接口部署的情况修改客户端源码中的请求地址
 
@@ -81,6 +90,7 @@ http://公交车服务IP地址:9090/setting
 开机自启动
 ------------------------
 在/etc/rc.local 或 /etc/rc.d/rc.local 文件中加入启动命令
+
 <pre><code>
 export FLASK_APP=app.py
 nohup flask run&
