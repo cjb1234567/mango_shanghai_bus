@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>到站提醒页面</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@3.3.7/dist/css/bootstrap.css" rel="stylesheet">
+    <!--    <script src="https://cdn.bootcss.com/jquery/3.3.1/jquery.js"></script>-->
+    <script src="https://libs.baidu.com/jquery/2.1.1/jquery.min.js" type="application/javascript"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@3.3.7/dist/js/bootstrap.min.js"></script>
+</head>
+<body>
+<div class="container">
+    <form class="form">
+        <div class="form-group">
+            <label for="busRoute">选择路线</label>
+            <input type="text" class="form-control" id="busRoute">
+        </div>
+        <div class="form-group">
+            <label for="direction">方向</label>
+            <select class="form-control" id="direction">
+            </select>
+        </div>
+        <div class="form-group">
+            <label for="deptStop">站台</label>
+            <select class="form-control" id="deptStop">
+            </select>
+        </div>
+        <div class="form-group">
+            <label for="deptTime">最晚提醒时间</label>
+            <input type="time" class="form-control" id="deptTime">
+        </div>
+        <div class="form-group">
+            <label for="startAlarm">开始提醒时间</label>
+            <input type="time" class="form-control" id="startAlarm">
+        </div>
+        <label class="checkbox-inline">
+            <input type="checkbox" name="daySwitch" value="1"> 工作日
+        </label>
+        <label class="checkbox-inline">
+            <input type="checkbox" name="daySwitch" value="2"> 每周六
+        </label>
+        <label class="checkbox-inline">
+            <input type="checkbox" name="daySwitch" value="3"> 每周日
+        </label>
+        <br>
+        <button type="button" class="btn btn-success" id="submit">提交</button>
+        <button type="button" class="btn btn-info" id="reset">重置</button>
+    </form>
+
+    <div class="modal" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
+                            aria-hidden="true">&times;</span></button>
+                    <h4 class="modal-title" id="myModalLabel">设置提示</h4>
+                </div>
+                <div class="modal-body">
+
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">确认</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+<script type="application/javascript">
+    $(function () {
+        $("#busRoute").blur(function () {
+            busRouteName = $("#busRoute").val();
+            $("#direction").empty().append();
+            $.ajax({
+                type: 'POST',
+                url: 'bus/route_info',
+                data: {
+                    "busRouteName": busRouteName
+                },
+                dataType: 'json',
+                success: function (data) {
+                    var srcHtml = '';
+                    $.each(data, function (i, item) {
+                        srcHtml += "<option value=" + item.stopType + ">" + item.fromStop + item.fromTime + "-" + item.toStop + item.toTime + "</option>";
+                    })
+                    $("#direction").html(srcHtml)
+                }
+            });
+        });
+        $("#direction").change(function () {
+            var direction = $("#direction").val();
+            var busRouteName = $("#busRoute").val();
+            $("#deptStop").empty().append();
+            $("input[name='direction']").val(direction);
+            $.ajax({
+                type: 'POST',
+                url: 'bus/stop_info',
+                data: {
+                    "busRouteName": busRouteName,
+                    "direction": direction
+                },
+                dataType: 'json',
+                success: function (data) {
+                    var srcHtml = '';
+                    $.each(data, function (i, item) {
+                        srcHtml += "<option value=" + item.stopid + ">" + item.stopName + "</option>";
+                    })
+                    $("#deptStop").html(srcHtml);
+                }
+            });
+        });
+
+        function getLocalTime(nS) {
+            return new Date(parseInt(nS) * 1000).toLocaleString().replace(/:\d{1,2}$/, ' ');
+        }
+
+        $("#submit").click(function () {
+            var busRoute = $("#busRoute").val();
+            var direction = $("#direction").val();
+            var deptStop = $("#deptStop").val();
+            var deptTime = $("#deptTime").val();
+            var startAlarm = $("#startAlarm").val();
+            $.ajax({
+                type: 'POST',
+                url: 'bus/info_submit',
+                data: {
+                    "busRoute": busRoute,
+                    "direction": direction,
+                    "deptStop": deptStop,
+                    "deptTime": deptTime,
+                    "startAlarm": startAlarm
+                },
+                dataType: 'json',
+                success: function (data) {
+                    var srcHtml = '<p>路线:' + data.busNo + ",提醒到站台:" + data.deptStopName + ",监控时间段:" + getLocalTime(data.startAlarm) + "--" + getLocalTime(data.deptTime) + "  设置成功!</p>";
+                    console.log(srcHtml);
+                    $(".modal-body").html(srcHtml);
+                    $('#myModal').modal('show');
+                }
+            });
+        });
+        $("#reset").click(function () {
+            $("#busRoute").val("");
+            $("#deptTime").val("");
+            $("#startAlarm").val("");
+            $("#direction").html("");
+            $("#deptStop").html("");
+            $("input[type='daySwitch']").attr('checked', false);
+        });
+    });
+</script>
+</html>
