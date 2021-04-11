@@ -56,7 +56,7 @@ http://公交车服务IP地址:9090/setting
 export FLASK_APP=app.py
 nohup flask run&
 nohup python3 client/detect.py &
-nohup java -jar magane.jar
+nohup java -jar mango.jar
 
 修改权限
 chmod +x /etc/rc.d/rc.local
