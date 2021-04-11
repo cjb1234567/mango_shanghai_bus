@@ -38,6 +38,9 @@ WTHER_URL = 'http://api.map.baidu.com/weather/v1/?district_id=310104&data_type=a
 # 公交车状态地址
 BUS_URL = 'http://127.0.0.1:5000/bus_status'
 
+# 公交车提醒地址
+BUS_STATUS_URL = 'http://192.168.43.180:9090/bus/get_audio/manual'
+#BUS_STATUS_URL = 'http://127.0.0.1:9090/bus/get_audio/manual'
 
 # 获取token
 def fetch_token():
@@ -55,9 +58,9 @@ def fetch_token():
         result_str = err.read()
     result_str = result_str.decode()
 
-    print(result_str)
+    # print(result_str)
     result = json.loads(result_str)
-    print(result)
+    # print(result)
     if 'access_token' in result.keys() and 'scope' in result.keys():
         print(SCOPE)
         print('SUCCESS WITH TOKEN: %s  EXPIRES IN SECONDS: %s' % (result['access_token'], result['expires_in']))
@@ -92,8 +95,12 @@ def speech_recognize(voice_file, file_lenth):
         print('asr http response http code : ' + str(err.code))
         result_str = err.read()
     result_str = str(result_str, 'utf-8')
-    # print(result_str)
+    print(result_str)
+    if 'result' not in result_str:
+        return 'empty voice'
     result = json.loads(result_str)['result'][0]
+    if result == '':
+        return 'empty voice'
     return result
 
 
@@ -114,8 +121,9 @@ def weather(day):
 
 # 公交车状态
 def bus_status():
-    params = {'direction': '0', 'stopId': '32.', 'busSid': 'd91e9c0046829f1b18130b55a2e0876e'}
-    resp = requests.post(BUS_URL, json=params)
+    # params = {'direction': '0', 'stopId': '32.', 'busSid': 'd91e9c0046829f1b18130b55a2e0876e'}
+    # resp = requests.post(BUS_URL, data=params)
+    resp = requests.get(BUS_STATUS_URL)
     return resp.text
 
 
@@ -134,6 +142,8 @@ def get_weekday():
         w = '天'
     return '今天是星期'+str(w)
 
+def pardon():
+    return '什么？我没听清'
 
 # 功能-关键词映射字典
 functions = {
@@ -143,7 +153,8 @@ functions = {
     '天气': 'weather(0)',
     '车&多久|到了没|来了没|来了吗': 'bus_status()',
     '几点': 'get_time()',
-    '今天&星期|礼拜': 'get_weekday()'
+    '星期|礼拜': 'get_weekday()',
+    'empty&voice': 'pardon()'
 }
 
 
