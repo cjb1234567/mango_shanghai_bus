@@ -18,8 +18,8 @@ FORMAT = pyaudio.paInt16  # 采样位数
 CHANNELS = 1  # 单声道
 RATE = 16000  # 采样频率
 
-API_KEY = 'asNaa4t2roz6lh5QsqpgwXVG'
-SECRET_KEY = '601af77bf44c84ffe088ba65a9407412'
+API_KEY = '' #请去百度申请
+SECRET_KEY = '' #请去百度申请
 
 # 获取TOKEN地址
 TOKEN_URL = 'http://openapi.baidu.com/oauth/2.0/token'
