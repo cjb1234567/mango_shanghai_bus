@@ -67,7 +67,9 @@ nohup python3 client/detect.py &
 java -jar mango.jar
 </pre></code>
 
-提示： 可根据服务接口部署的情况修改客户端源码中的请求地址
+提示： 
+1.请自行修改源码，可根据服务接口部署的情况修改客户端源码中的请求地址
+2.使用自己的API KEY 和 SECRET
 
 
 使用
