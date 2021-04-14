@@ -13,8 +13,8 @@ timer = time.perf_counter
 
 voice_api = Blueprint('voice_api', __name__)
 
-API_KEY = 'asNaa4t2roz6lh5QsqpgwXVG'
-SECRET_KEY = '601af77bf44c84ffe088ba65a9407412'
+API_KEY = '' # 请自行到百度申请
+SECRET_KEY = '' # 请自行到百度申请
 FORMAT = 'wav'
 
 mac = uuid.UUID(int=uuid.getnode()).hex[-12:].upper()
